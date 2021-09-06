@@ -3,7 +3,7 @@ import {BrowserRouter, Switch, Route} from "react-router-dom";
 import {io} from "socket.io-client";
 import makeToast from "./Toaster";
 import register from "./pages/register";
-import index from "./pages";
+import index from "./pages/index";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import Chatroom from "./pages/chatroom";
@@ -12,7 +12,7 @@ function App() {
     const [socket, setSocket] = useState(null);
 
     const setupSocket = () => {
-        const token = localStorage.getItem("CC_Token");
+        const token = localStorage.getItem("token");
         if (token && !socket) {
             const newSocket = io("http://localhost/8000", {
                 query: {

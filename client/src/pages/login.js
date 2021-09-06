@@ -1,10 +1,11 @@
 import React, {createRef} from 'react';
 import makeToast from "../Toaster";
 import axios from "axios";
-import {withRouter} from "react-router-dom";
+import {withRouter, useHistory} from "react-router-dom";
 
 const Login = (props) => {
     const emailRef = createRef();
+    const history = useHistory();
     const passwordRef = createRef();
 
     const loginUser = () => {
@@ -16,13 +17,14 @@ const Login = (props) => {
             password,
         })
             .then((res) => {
-                makeToast("success", res.data.message);
-                localStorage.setItem("CC_Token", res.data.token);
-                props.history.push("/dashboard");
+              //res.data.messag
+                makeToast("success", "Başarılı işleeeem");
+                localStorage.setItem("token", res.data.token);
+                history.push("/dashboard");
                 props.setupSocket();
             })
             .catch((err) => {
-                // console.log(err)
+                console.log(err)
                 if (err && err.res && err.res.data && err.res.data.message)
                     makeToast("error", err.res.data.message);
             });
