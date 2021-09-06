@@ -1,64 +1,35 @@
-// const mongoose = require("mongoose");
-// const Chatroom = mongoose.model("Chatroom");
-// exports.createChatroom = async (req, res) => {
-//     const {name} = req.body;
-//     const nameRegex = /^[A-Za-z\s+$]/;
-//
-//     if (!nameRegex.test(name)) throw  "Oda adı yalnızca alfabetik karakterleri içerebilir.";
-//     const chatroomExist = await Chatroom.findOne({name});
-//
-//     if (chatroomExist) throw "Bu oda adı çoktan alınmış";
-//
-//     const chatroom = new Chatroom({
-//         name,
-//     })
-//     await chatroom.save();
-//
-//     res.json({
-//         message: "Chatroom created",
-//     });
-// }
-//
-// exports.getAllChatrooms = async (req, res) => {
-//     const chatrooms = await Chatroom.find({});
-//
-//     res.json(chatrooms);
-// }
-
 const mongoose = require("mongoose");
 const Chatroom = mongoose.model("Chatroom");
 
-exports.createChatroom = async (req, res) => {
+const createChatroom = async (req, res) => {
     const {name} = req.body;
-
-    const nameRegex = /^[A-Za-z\s]+$/;
-
-    if (!nameRegex.test(name)) throw "Chatroom name can contain only alphabets.";
-
-    const chatroomExists = await Chatroom.findOne({name});
-
-    if (chatroomExists) throw "Chatroom with that name already exists!";
-
-    const chatroom = new Chatroom({
-        name,
+    const oldRoom = await Chatroom.find({name});
+    console.log(oldRoom)
+    if (oldRoom) {
+        return res.status(400).json({
+            message: "Bu oda adı kullanılıyor ..!"
+        })
+    }
+    const chatroom = await Chatroom.create({
+        ...req.body,
     });
-
-    await chatroom.save();
-
-    res.json({
-        message: "Chatroom created!",
+    chatroom.save().then(() => {
+        res.status(201).json({
+            message: "Oda oluşturuldu...",
+            chatroom,
+        });
     });
 };
 
-// exports.getAllChatrooms = async (req, res) => {
-//     const chatrooms = await Chatroom.find({});
-//
-//     res.json(chatrooms);
-// };
-exports.getAllChatrooms = async (req, res) => {
+const getAllChatrooms = async (req, res) => {
     const chatrooms = await Chatroom.find();
+    console.log(chatrooms)
     return res.status(200).json({
         success: true,
-        data: chatrooms
+        data: chatrooms,
     })
+}
+module.exports = {
+    createChatroom,
+    getAllChatrooms,
 }

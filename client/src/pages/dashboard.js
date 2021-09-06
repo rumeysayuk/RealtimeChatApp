@@ -21,14 +21,13 @@ const Dashboard = (props) => {
     };
     useEffect(() => {
         getChatrooms();
-
     }, []);
     return (
         <div className="card">
-            <div className="cardHeader">ChatRoom Create</div>
+            <div className="cardHeader">ChatRooms</div>
             <div className="cardBody">
                 <div className="inputGroup">
-                    <label htmlFor="chatroomName">Name</label>
+                    <label htmlFor="chatroomName">Chatroom Name</label>
                     <input type="text" name="chatroomName" id="chatroomName" placeholder="Chocolate12"/>
                 </div>
             </div>
@@ -38,13 +37,13 @@ const Dashboard = (props) => {
                     <div key={chatroom._id} className="chatroom">
                         <div>{chatroom.name}</div>
                         <Link to={"/chatroom/" + chatroom._id}>
-                            <div className="join">Join</div>
+                            <div className="join">Katıl</div>
                         </Link>
                     </div>
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Dashboard;

@@ -13,7 +13,7 @@ const Login = (props) => {
 
         axios.post("http://localhost:8000/user/login", {
             email,
-            password
+            password,
         })
             .then((res) => {
                 makeToast("success", res.data.message);
@@ -22,27 +22,28 @@ const Login = (props) => {
                 props.setupSocket();
             })
             .catch((err) => {
-                console.log(err)
+                // console.log(err)
                 if (err && err.res && err.res.data && err.res.data.message)
                     makeToast("error", err.res.data.message);
-            })
-    }
+            });
+    };
     return (
         <div className="card">
             <div className="cardHeader">Login</div>
             <div className="cardBody">
                 <div className="inputGroup">
                     <label htmlFor="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="example@gmail.com" ref={emailRef}/>
+                    <input type="email" name="email" id="email" placeholder="ex@example.com" ref={emailRef}/>
                 </div>
                 <div className="inputGroup">
-                    <label htmlFor="password">Email</label>
-                    <input type="password" name="password" id="password" placeholder="Your password" ref={passwordRef}/>
+                    <label htmlFor="password">Password</label>
+                    <input type="password" name="password" id="password" placeholder="Your Password" ref={passwordRef}/>
                 </div>
-                <button onClick={loginUser}> Login</button>
+                <button onClick={loginUser}>Login</button>
             </div>
         </div>
-    )
-}
+    );
+};
+
 
 export default withRouter(Login);

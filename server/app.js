@@ -1,18 +1,15 @@
 const express = require("express");
-
 const app = express();
+const errorHandlers = require("./handlers/errorHandlers");
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-const cors = require('cors');
-app.use(cors());
+app.use(require("cors")());
 
 app.use("/user", require("./routes/user"));
 app.use("/chatroom", require("./routes/chatroom"));
 
-//Setup Error Handlers
-const errorHandlers = require("./handlers/errorHandlers");
 app.use(errorHandlers.notFound);
 app.use(errorHandlers.mongooseErrors);
 if (process.env.ENV === "DEVELOPMENT") {
