@@ -3,8 +3,7 @@ const Chatroom = mongoose.model("Chatroom");
 
 const createChatroom = async (req, res) => {
     const {name} = req.body;
-    const oldRoom = await Chatroom.find({name});
-    console.log(oldRoom)
+    const oldRoom = await Chatroom.findOne({name});
     if (oldRoom) {
         return res.status(400).json({
             message: "Bu oda adı kullanılıyor ..!"
@@ -22,8 +21,9 @@ const createChatroom = async (req, res) => {
 };
 
 const getAllChatrooms = async (req, res) => {
+    console.log(req)
     const chatrooms = await Chatroom.find();
-    console.log(chatrooms)
+    console.log(res)
     return res.status(200).json({
         success: true,
         data: chatrooms,
