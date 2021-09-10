@@ -5,8 +5,7 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(" ")[1];
         const payload = jwt.verify(token, process.env.SECRET);
         req.payload = payload;
-        console.log(payload)
-        next();
+        return next();
     } catch (err) {
         res.status(401).json({
             message: "Yetkiniz yok!",

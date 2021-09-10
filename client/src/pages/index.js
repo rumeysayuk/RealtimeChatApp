@@ -10,7 +10,7 @@ const Index = (props) => {
         } else {
             history.push("/dashboard");
         }
-    }, [0]);
+    });
     return (
         <div></div>
     )

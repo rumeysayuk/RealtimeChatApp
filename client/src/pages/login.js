@@ -17,8 +17,7 @@ const Login = (props) => {
             password,
         })
             .then((res) => {
-              //res.data.messag
-                makeToast("success", "Başarılı işleeeem");
+                makeToast("success", res.data.message);
                 localStorage.setItem("token", res.data.token);
                 history.push("/dashboard");
                 props.setupSocket();

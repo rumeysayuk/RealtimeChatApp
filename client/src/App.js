@@ -10,13 +10,14 @@ import Chatroom from "./pages/chatroom";
 
 function App() {
     const [socket, setSocket] = useState(null);
+    const baseUrl="http://localhost:8000";
 
     const setupSocket = () => {
         const token = localStorage.getItem("token");
         if (token && !socket) {
-            const newSocket = io("http://localhost/8000", {
+            const newSocket = io(baseUrl, {
                 query: {
-                    token: localStorage.getItem("CC_Token"),
+                    token: localStorage.getItem("token"),
                 },
             });
             newSocket.on("disconnect", () => {
@@ -32,7 +33,7 @@ function App() {
     };
     useEffect(() => {
         setupSocket();
-    }, []);
+    });
     return (
         <BrowserRouter>
             <Switch>

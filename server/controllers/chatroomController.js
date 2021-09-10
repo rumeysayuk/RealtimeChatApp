@@ -21,12 +21,10 @@ const createChatroom = async (req, res) => {
 };
 
 const getAllChatrooms = async (req, res) => {
-    console.log(req)
     const chatrooms = await Chatroom.find();
-    console.log(res)
     return res.status(200).json({
         success: true,
-        data: chatrooms,
+         data: chatrooms,
     })
 }
 module.exports = {

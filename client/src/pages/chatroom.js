@@ -27,6 +27,7 @@ const Chatroom = ({match, socket}) => {
             socket.on("newMessage", (message) => {
                 const newMessages = [...messages, message];
                 setMessages(newMessages);
+                console.log(messages)
             });
         }
     }, [messages]);

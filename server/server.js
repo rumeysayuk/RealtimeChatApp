@@ -17,7 +17,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
     allowEIO3: true,
     cors: {
-        origin: "http://localhost/8000",
+        origin: "http://localhost:3000",
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true
     }
@@ -34,7 +34,9 @@ io.use(async (socket, next) => {
         const payload = await jwt.verify(token, process.env.SECRET);
         socket.userId = payload.id;
         next();
-    } catch (err) {}
+    } catch (err) {
+        console.log(err)
+    }
 });
 io.on("connection", (socket) => {
     console.log("Connected: " + socket.userId);
@@ -44,12 +46,12 @@ io.on("connection", (socket) => {
     });
     socket.on("joinRoom", ({chatroomId}) => {
         socket.join(chatroomId);
-        console.log("Odaya biri katıldı" + chatroomId);
+        console.log("Odaya biri katıldı " + chatroomId);
     });
 
     socket.on("leaveRoom", ({chatroomId}) => {
         socket.join(chatroomId);
-        console.log("Odadan biri ayrıldı" + chatroomId);
+        console.log("Odadan biri ayrıldı " + chatroomId);
     });
 
     socket.on("chatroomMessage", async ({chatroomId, message}) => {

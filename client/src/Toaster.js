@@ -6,15 +6,12 @@ const Toast = Swal.mixin({
     showConfirmButton: false,
     timer: 3000,
     timerProgressBar: true,
-    onOpen: (toast) => {
-        toast.addEventListener("mouseenter", Swal.stopTimer);
-        toast.addEventListener("mouseleave", Swal.resumeTimer);
-    },
+
 });
 const makeToast = (type, message) => {
     Toast.fire({
         icon: type,
-        text: message,
+        title: message,
     });
 };
 export default makeToast;
