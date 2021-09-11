@@ -1,6 +1,7 @@
 import React, {createRef} from 'react';
 import makeToast from "../Toaster";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const Register = (props) => {
     const nameRef = createRef();
@@ -44,6 +45,9 @@ const Register = (props) => {
                 <input type="password" name="password" id="password" placeholder="Your Password" ref={passwordRef}/>
             </div>
             <button onClick={registerUser}>Register</button>
+            <Link to={"/login"}>
+                <button>Login</button>
+            </Link>
         </div>
     );
 };

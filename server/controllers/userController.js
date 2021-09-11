@@ -11,11 +11,11 @@ const register = async (req, res) => {
         password: hashedPassword,
         name,
     });
-    const token = jwt.sign({email: result.email, id: result._id}, process.env.SECRET, {expiresIn: "1h"})
+    const token = jwt.sign({email: result.email, id: result._id}, process.env.SECRET, {expiresIn: "5h"})
     return res.status(201).json({result, token,message:"Kayıt olma işlemi başarılı..."})
 }
 
-const login = async (req, res, next) => {
+const login  = async (req, res, next) => {
     const {email, password} = req.body;
     const oldUser = await User.findOne({email}).select("+password");
     if (!oldUser) return next("Böyle Bir Kullanıcı Bulunamadı", 400);

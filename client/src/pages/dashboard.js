@@ -1,12 +1,14 @@
 import React, {useState, useEffect, createRef} from 'react';
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link,useHistory} from "react-router-dom";
 import makeToast from "../Toaster";
-const baseUrl="http://localhost:8000/chatroom";
+
+const baseUrl = "http://localhost:8000/chatroom";
 
 const Dashboard = (props) => {
     const [chatrooms, setChatrooms] = useState([]);
     const nameRef = createRef();
+    const history=useHistory();
     const getChatrooms = () => {
         axios.get(baseUrl, {
             headers: {
@@ -37,6 +39,10 @@ const Dashboard = (props) => {
                 makeToast("error", err.response?.data?.message);
             });
     }
+    const logOut = () => {
+        localStorage.clear();
+        history.push("/login")
+    }
     return (
         <div className="card">
             <div className="cardHeader">ChatRooms</div>
@@ -57,6 +63,7 @@ const Dashboard = (props) => {
                     </div>
                 ))}
             </div>
+            <button onClick={logOut}>Çıkış yap</button>
         </div>
     );
 };
