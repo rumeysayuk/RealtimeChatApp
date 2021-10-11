@@ -4,6 +4,7 @@ import {Link, withRouter} from "react-router-dom";
 const Chatroom = ({match, socket}) => {
     const chatroomId = match.params.id;
     const [messages, setMessages] = useState([]);
+    console.log(messages)
     const messageRef = useRef();
     const [userId, setUserId] = useState("");
 
@@ -13,7 +14,6 @@ const Chatroom = ({match, socket}) => {
                 chatroomId,
                 message: messageRef.current.value,
             });
-
             messageRef.current.value = "";
         }
     };
@@ -28,7 +28,6 @@ const Chatroom = ({match, socket}) => {
             socket.on("newMessage", (message) => {
                 const newMessages = [...messages, message];
                 setMessages(newMessages);
-                console.log(...messages)
             });
         }
         //eslint-disable-next-line
@@ -50,7 +49,7 @@ const Chatroom = ({match, socket}) => {
             }
         };
         //eslint-disable-next-line
-    }, []);
+    }, [messages]);
 
     return (
         <div className="chatroomPage">

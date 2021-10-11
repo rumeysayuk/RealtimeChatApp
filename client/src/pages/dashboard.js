@@ -31,8 +31,8 @@ const Dashboard = (props) => {
         axios.post(baseUrl, {
             name,
         })
-            .then((response) => {
-                makeToast("success", response.data.message);
+            .then((res) => {
+                makeToast("success", res.data.message);
                 props.history.push("/dashboard");
             })
             .catch((err) => {
