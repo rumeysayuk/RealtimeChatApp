@@ -1,54 +1,45 @@
-import React, {createRef} from 'react';
+import React from 'react';
 import makeToast from "../Toaster";
-import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useHistory, withRouter} from "react-router-dom";
+import {Field, Form, Formik} from "formik";
+import * as authService from "../services/authService";
+import {register} from "../store/actions/auth";
+import {useDispatch} from "react-redux";
 
-const Register = (props) => {
-    const nameRef = createRef();
-    const emailRef = createRef();
-    const passwordRef = createRef();
+const Register = () => {
+    const dispatch = useDispatch();
+    const history = useHistory();
 
-    const registerUser = (props) => {
-        const name = nameRef.current.value;
-        const email = emailRef.current.value;
-        const password = passwordRef.current.value;
-
-        axios
-            .post("http://localhost:8000/user/register", {
-                name,
-                email,
-                password,
-            })
-            .then((response) => {
-                makeToast("success", response.data.message);
-                props.history.push("/login");
-            })
-            .catch((err) => {
-                // console.log(err);
-                if (err && err.response && err.response.data && err.response.data.message)
-                    makeToast("error", err.response.data.message);
-            });
+    const registerUser = (values) => {
+        authService.register(values)
+            .then((res) => {
+                dispatch(register(res.data.result))
+                makeToast("success", res.data.message);
+                history.push("/login");
+            }).catch((err) => {
+            if (err && err.res && err.res.data && err.res.data.message)
+                makeToast("error", err.res.data.message);
+        })
     };
     return (
         <div className="card">
             <div className="cardHeader">Register</div>
             <div className="cardBody">
-                <div className="inputGroup">
-                    <label htmlFor="name">Name</label>
-                    <input type="text" name="name" id="name" placeholder="rumoo" ref={nameRef}/>
-                </div>
-                <label htmlFor="email">Email</label>
-                <input type="email" name="email" id="email" placeholder="ex@example.com" ref={emailRef}/>
+                <Formik
+                    initialValues={{name: "", email: "", password: ""}}
+                    onSubmit={async (values) => registerUser(values)}>
+                    <Form style={{margin: 20}}>
+                        <Field name="name" id="name" type="text" placeholder="rumeysa"/>
+                        <Field name="email" id="email" type="email" placeholder="ex@example.com"/>
+                        <Field name="password" type="password" id="password" placeholder="Your Password"/>
+                        <button type={"submit"} style={{marginBottom: 20}} onClick={registerUser}>Register</button>
+                        <Link to={"/login"}>
+                            <button type={"submit"}>Login</button>
+                        </Link>
+                    </Form>
+                </Formik>
             </div>
-            <div className="inputGroup">
-                <label htmlFor="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="Your Password" ref={passwordRef}/>
-            </div>
-            <button onClick={registerUser}>Register</button>
-            <Link to={"/login"}>
-                <button>Login</button>
-            </Link>
         </div>
     );
 };
-export default Register;
+export default withRouter(Register);

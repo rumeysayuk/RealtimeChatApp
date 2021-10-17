@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Chatroom = mongoose.model("Chatroom");
-
+const Message = mongoose.model("Message")
 const createChatroom = async (req, res) => {
     const {name} = req.body;
     const oldRoom = await Chatroom.findOne({name});
@@ -10,14 +10,12 @@ const createChatroom = async (req, res) => {
         })
     }
     const chatroom = await Chatroom.create({
-        ...req.body,
+       name,
     });
-    chatroom.save().then(() => {
-        res.status(201).json({
+        res.json({
             message: "Oda oluşturuldu...",
-            chatroom,
+            chatroom
         });
-    });
 };
 
 const getAllChatrooms = async (req, res) => {
@@ -27,7 +25,17 @@ const getAllChatrooms = async (req, res) => {
          data: chatrooms,
     })
 }
+
+const getMessagesByChatroom = async (req, res) => {
+    const {id } = req.params
+    const messages = await Message.find({chatroom: id})
+    return res.status(200).json({
+        success: true,
+         data: messages,
+    })
+}
 module.exports = {
     createChatroom,
     getAllChatrooms,
+    getMessagesByChatroom
 }

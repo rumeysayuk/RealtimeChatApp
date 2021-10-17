@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useHistory} from "react-router-dom";
 
-const Index = (props) => {
+const Index = () => {
     const history = useHistory();
     useEffect(() => {
         const token = localStorage.getItem("token");

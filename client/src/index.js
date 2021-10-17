@@ -4,6 +4,14 @@ import App from './App';
 import "./styles/common.css"
 import "./styles/chatroom.css"
 import "./Toaster";
+import {applyMiddleware, compose, createStore} from "redux";
+import thunk from "redux-thunk";
+import reducers from "./store/reducers"
+import {Provider} from "react-redux";
+import {devToolsEnhancer} from "redux-devtools-extension";
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+
+const store = createStore(reducers, compose(applyMiddleware(thunk), devToolsEnhancer()))
+
+ReactDOM.render(<Provider store={store}> <App/></Provider>, document.getElementById('root'));
 

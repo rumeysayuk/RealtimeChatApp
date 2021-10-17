@@ -1,14 +1,17 @@
 import React, {useState, useEffect, createRef} from 'react';
 import axios from "axios";
-import {Link,useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import makeToast from "../Toaster";
+import {logOut} from "../store/actions/auth";
+import {useDispatch} from "react-redux";
 
 const baseUrl = "http://localhost:8000/chatroom";
 
-const Dashboard = (props) => {
+const Dashboard = () => {
     const [chatrooms, setChatrooms] = useState([]);
     const nameRef = createRef();
-    const history=useHistory();
+    const history = useHistory();
+    const dispatch = useDispatch();
     const getChatrooms = () => {
         axios.get(baseUrl, {
             headers: {
@@ -33,14 +36,17 @@ const Dashboard = (props) => {
         })
             .then((res) => {
                 makeToast("success", res.data.message);
-                props.history.push("/dashboard");
+                setChatrooms([...chatrooms, res.data.chatroom])
             })
             .catch((err) => {
+                console.log(err)
                 makeToast("error", err.response?.data?.message);
             });
     }
-    const logOut = () => {
-        localStorage.clear();
+
+    const handleLogOut = (e) => {
+        e.preventDefault();
+        dispatch(logOut())
         history.push("/login")
     }
     return (
@@ -52,7 +58,7 @@ const Dashboard = (props) => {
                     <input type="text" name="chatroomName" id="chatroomName" placeholder="Chocolate12" ref={nameRef}/>
                 </div>
             </div>
-            <button onClick={createChatroom}>Create Chatroom</button>
+            <button onClick={() => createChatroom()}>Create Chatroom</button>
             <div className="chatrooms">
                 {chatrooms.map(chatroom => (
                     <div key={chatroom._id} className="chatroom">
@@ -63,7 +69,7 @@ const Dashboard = (props) => {
                     </div>
                 ))}
             </div>
-            <button onClick={logOut}>Çıkış yap</button>
+            <button onClick={handleLogOut}>Çıkış yap</button>
         </div>
     );
 };

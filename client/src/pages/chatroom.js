@@ -1,13 +1,14 @@
 import React, {useState, useEffect, useRef} from "react";
 import {Link, withRouter} from "react-router-dom";
+import makeToast from "../Toaster";
+import ChatroomMessage from "../components/chatroomMessage/chatroomMessage";
+import * as chatroomService from "../services/chatroomService"
 
 const Chatroom = ({match, socket}) => {
     const chatroomId = match.params.id;
     const [messages, setMessages] = useState([]);
-    console.log(messages)
     const messageRef = useRef();
     const [userId, setUserId] = useState("");
-
     const sendMessage = () => {
         if (socket) {
             socket.emit("chatroomMessage", {
@@ -17,38 +18,39 @@ const Chatroom = ({match, socket}) => {
             messageRef.current.value = "";
         }
     };
-
+    useEffect(() => {
+        if (chatroomId){
+            chatroomService.getMessages(chatroomId).then((res)=>{
+                setMessages(res.data.data)
+            }).catch((err)=>{
+                makeToast("error", err.response?.data?.message)
+            })
+        }
+    }, [chatroomId])
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) {
-            const payload = JSON.parse(atob(token.split(".")[1]));
-            setUserId(payload.id);
-        }
-        if (socket) {
-            socket.on("newMessage", (message) => {
-                const newMessages = [...messages, message];
-                setMessages(newMessages);
-            });
-        }
-        //eslint-disable-next-line
-    }, [messages]);
-
-    useEffect(() => {
         if (socket) {
             socket.emit("joinRoom", {
                 chatroomId,
             });
+            if (token) {
+                const payload = JSON.parse(atob(token.split(".")[1]));
+                setUserId(payload.id);
+            }
+            if (socket) {
+                socket.on("newMessage", (message) => {
+                    const newMessages = [...messages, message];
+                    setMessages(newMessages);
+                });
+            }
         }
-
         return () => {
-            //Component Unmount
             if (socket) {
                 socket.emit("leaveRoom", {
                     chatroomId,
                 });
             }
         };
-        //eslint-disable-next-line
     }, [messages]);
 
     return (
@@ -56,33 +58,16 @@ const Chatroom = ({match, socket}) => {
             <div className="chatroomSection">
                 <div className="cardHeader">Chatroom Name</div>
                 <div className="chatroomContent">
-                    {messages.map((message, i) => (
-                        <div key={i} className="message">
-              <span
-                  className={
-                      userId === message.userId ? "ownMessage" : "otherMessage"
-                  }
-              >
-                {message.name}:
-              </span>{" "}
-                            {message.message}
-                        </div>
+                    {messages.map((message) => (
+                        <ChatroomMessage userId={userId} message={message}/>
                     ))}
                 </div>
                 <div className="chatroomActions">
                     <div>
-                        <input
-                            type="text"
-                            name="message"
-                            placeholder="Say something!"
-                            ref={messageRef}
-                        />
+                        <input type="text" name="message" placeholder="Say something!" ref={messageRef}/>
                     </div>
                     <div>
-                        <button className="join" onClick={sendMessage}>
-                            Send
-                        </button>
-
+                        <button className="join" onClick={sendMessage}>Send</button>
                     </div>
                     <Link to={"/dashboard"}>
                         <button>All Chatrooms</button>

@@ -11,8 +11,7 @@ const register = async (req, res) => {
         password: hashedPassword,
         name,
     });
-    const token = jwt.sign({email: result.email, id: result._id}, process.env.SECRET, {expiresIn: "5h"})
-    return res.status(201).json({result, token, message: "Kayıt olma işlemi başarılı..."})
+    return res.status(201).json({result, message: "Kayıt olma işlemi başarılı..."})
 }
 
 const login = async (req, res, next) => {
@@ -22,7 +21,7 @@ const login = async (req, res, next) => {
     if (!oldUser) {
         return next("Please Check Your Inputs!", 400);
     }
-    const token = jwt.sign({email: oldUser.email, id: oldUser._id}, process.env.SECRET, {expiresIn: "5h"})
+    const token = jwt.sign({email: oldUser.email, id: oldUser._id}, process.env.SECRET, {expiresIn: "83h"})
 
     return res.status(200).json({result: oldUser, token, message: "Giriş işlemi başarılı..."})
 }
