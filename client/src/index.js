@@ -11,6 +11,7 @@ import {Provider} from "react-redux";
 import {devToolsEnhancer} from "redux-devtools-extension";
 
 
+
 const store = createStore(reducers, compose(applyMiddleware(thunk), devToolsEnhancer()))
 
 ReactDOM.render(<Provider store={store}> <App/></Provider>, document.getElementById('root'));

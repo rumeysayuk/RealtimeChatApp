@@ -4,9 +4,9 @@ import {io} from "socket.io-client";
 import makeToast from "./Toaster";
 import register from "./pages/register";
 import index from "./pages/index";
-import Login from "./pages/login";
+import Login from "./pages/Login/login";
 import Dashboard from "./pages/dashboard";
-import Chatroom from "./pages/chatroom";
+import Chatroom from "./pages/Chatroom/chatroom";
 
 function App() {
     const [socket, setSocket] = useState(null);

@@ -1,10 +1,12 @@
 import React, {useState, useEffect, useRef} from "react";
 import {Link, withRouter} from "react-router-dom";
-import makeToast from "../Toaster";
-import ChatroomMessage from "../components/chatroomMessage/chatroomMessage";
-import * as chatroomService from "../services/chatroomService"
+import makeToast from "../../Toaster";
+import ChatroomMessage from "../../components/chatroomMessage/chatroomMessage";
+import * as chatroomService from "../../services/chatroomService"
+import useStyles from "./styles"
 
 const Chatroom = ({match, socket}) => {
+    const classes = useStyles();
     const chatroomId = match.params.id;
     const [messages, setMessages] = useState([]);
     const messageRef = useRef();
@@ -19,10 +21,10 @@ const Chatroom = ({match, socket}) => {
         }
     };
     useEffect(() => {
-        if (chatroomId){
-            chatroomService.getMessages(chatroomId).then((res)=>{
+        if (chatroomId) {
+            chatroomService.getMessages(chatroomId).then((res) => {
                 setMessages(res.data.data)
-            }).catch((err)=>{
+            }).catch((err) => {
                 makeToast("error", err.response?.data?.message)
             })
         }
@@ -51,15 +53,15 @@ const Chatroom = ({match, socket}) => {
                 });
             }
         };
-    }, [messages]);
+    }, [chatroomId, messages, socket]);
 
     return (
         <div className="chatroomPage">
             <div className="chatroomSection">
                 <div className="cardHeader">Chatroom Name</div>
                 <div className="chatroomContent">
-                    {messages.map((message) => (
-                        <ChatroomMessage userId={userId} message={message}/>
+                    {messages.map((message, i) => (
+                        <ChatroomMessage key={i} userId={userId} message={message}/>
                     ))}
                 </div>
                 <div className="chatroomActions">

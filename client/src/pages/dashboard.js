@@ -1,11 +1,9 @@
 import React, {useState, useEffect, createRef} from 'react';
-import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
 import makeToast from "../Toaster";
 import {logOut} from "../store/actions/auth";
 import {useDispatch} from "react-redux";
-
-const baseUrl = "http://localhost:8000/chatroom";
+import * as chatroomService from "../services/chatroomService";
 
 const Dashboard = () => {
     const [chatrooms, setChatrooms] = useState([]);
@@ -13,14 +11,9 @@ const Dashboard = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const getChatrooms = () => {
-        axios.get(baseUrl, {
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("token"),
-            },
+        chatroomService.getChatroom().then(res => {
+            setChatrooms(res.data.data);
         })
-            .then(res => {
-                setChatrooms(res.data.data);
-            })
             .catch(err => {
                 console.log(err.message)
             });
@@ -31,23 +24,17 @@ const Dashboard = () => {
 
     const createChatroom = () => {
         const name = nameRef.current.value;
-        axios.post(baseUrl, {
-            name,
-        })
-            .then((res) => {
-                makeToast("success", res.data.message);
-                setChatrooms([...chatrooms, res.data.chatroom])
-            })
-            .catch((err) => {
-                console.log(err)
-                makeToast("error", err.response?.data?.message);
-            });
+        chatroomService.createChatroom(name).then((res) => {
+            makeToast("success", res.data.message);
+            setChatrooms([...chatrooms, res.data.chatroom])
+        }).catch((err) => {
+            makeToast("error", err.response?.data?.message);
+        });
     }
-
     const handleLogOut = (e) => {
         e.preventDefault();
         dispatch(logOut())
-        history.push("/login")
+        history.push("/Login")
     }
     return (
         <div className="card">

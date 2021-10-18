@@ -6,7 +6,7 @@ const Index = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) {
-            history.push("/login");
+            history.push("/Login");
         } else {
             history.push("/dashboard");
         }
